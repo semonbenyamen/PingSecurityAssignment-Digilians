@@ -1,5 +1,7 @@
+// It makes sure that every part of an IP address is from zero to 255.
 const IPV4 = /^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/;
 const HOSTNAME =
+// Letters and numbers are allowed.
   /^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*$/;
  
 function isValidHost(host) {

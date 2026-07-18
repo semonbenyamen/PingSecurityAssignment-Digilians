@@ -9,14 +9,16 @@ const pingHost = async (req, res) => {
   let parsed;
  
   try {
+// The request is sent to parseXML to ensure that the XML is correct and secure.
     parsed = parseXML(req.body);
   } catch (err) {
-    // Never reflect the raw payload or parser internals back to the client.
     return sendXML(res, 400, { success: false, message: "Invalid XML payload." });
   }
  
+// take the value of <host> found inside <pingRequest>.
   const host = parsed?.pingRequest?.host;
- 
+
+// Checking the type and length
   if (!host || typeof host !== "string") {
     return sendXML(res, 400, { success: false, message: "Host is required." });
   }
@@ -27,11 +29,13 @@ const pingHost = async (req, res) => {
     return sendXML(res, 400, { success: false, message: "Host is too long." });
   }
  
+// Final Verification
   if (!isValidHost(cleanHost)) {
     return sendXML(res, 400, { success: false, message: "Invalid hostname or IP address." });
   }
  
   try {
+// Only after successful verification is the host sent to the ping service.
     const result = await pingHostService(cleanHost);
     return sendXML(res, 200, {
       success: true,

@@ -2,10 +2,8 @@ const { execFile } = require("child_process");
  
 function pingHostService(host) {
   return new Promise((resolve) => {
-    // execFile (not exec) with an argument array means the host string is
-    // never passed through a shell, so shell metacharacters (;, |, &&, `` ` ``,
-    // $()) cannot be used to chain or inject additional commands.
     const args =
+  // The ping command has different parameters depending on the operating system, The code specifies the system is Windows or Linux..
       process.platform === "win32"
         ? ["-n", "2", "-w", "2000", host]
         : ["-c", "2", "-W", "2", host];
@@ -14,12 +12,13 @@ function pingHostService(host) {
       "ping",
       args,
       {
-        timeout: 5000, // kill the process if it hangs -> prevents resource-exhaustion DoS
-        maxBuffer: 1024 * 64, // cap stdout/stderr size
+  // the process is stopped after five seconds
+        timeout: 5000,
+  // The output size is limited to 64 KB, This is additional protection against memory consumption
+        maxBuffer: 1024 * 64,
       },
       (error) => {
         if (error) {
-          // Non-zero exit / timeout just means "unreachable", not a server fault.
           return resolve({
             host,
             reachable: false,
